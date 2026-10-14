@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Interview Atlas — 700 curated Java full-stack interview questions with model answers across Angular, Java, Multithreading, Spring Boot, Databases, Microservices, Docker + Jenkins, CI/CD, AWS, Cloud, Kafka, System Design and Leadership. Animated, interactive and offline-friendly.">
+  <title>Interview Atlas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%239a7bff'/><stop offset='1' stop-color='%2359e1bd'/></linearGradient></defs><rect width='100' height='100' rx='26' fill='url(%23g)'/><text x='50' y='68' font-size='56' text-anchor='middle' fill='white'>✦</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="Interview Atlas home">
+      <span class="brand-mark">✦</span><span>interview<span class="brand-light">atlas</span></span>
+    </a>
+    <nav class="topnav" aria-label="Main navigation">
+      <a href="#tracks" data-nav>Tracks</a>
+      <a href="#practice" data-nav>Practice</a>
+      <a href="#story" data-nav>Your story</a>
+      <a href="#journey" data-nav>Journey</a>
+      <a href="#lab" data-nav>Runtime lab</a>
+      <a href="#toolkit" data-nav>Toolkit</a>
+    </nav>
+    <div class="top-actions">
+      <button id="openPalette" class="search-trigger" aria-label="Search all questions (Ctrl+K)">
+        <span>⌕</span><span class="search-trigger-text">Search 700+ questions</span><kbd>Ctrl K</kbd>
+      </button>
+      <span class="streak-pill" id="streakPill" title="Daily practice streak">🔥 <b id="streakCount">0</b></span>
+      <button id="voiceBtn" class="icon-btn" aria-label="Narration settings" aria-expanded="false" title="Narration settings">🔊</button>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle light/dark theme" title="Toggle theme">☼</button>
+      <button id="menuToggle" class="icon-btn menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+    <div class="voice-pop panel" id="voicePop" hidden>
+      <div class="eyebrow">NARRATION</div>
+      <label for="voiceSelect">Voice<select id="voiceSelect"><option value="">System default voice</option></select></label>
+      <label for="speechRate">Speed <b id="speechRateValue">1.0×</b><input id="speechRate" type="range" min="0.7" max="1.6" step="0.1" value="1"></label>
+      <div class="row-gap"><button id="testVoice" class="button button-quiet">▶ Test</button><button id="stopSpeech" class="button button-quiet">■ Stop</button></div>
+      <small class="muted">Uses your browser's built-in speech synthesis.</small>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ════════════════ HOME ════════════════ -->
+    <div id="homeView">
+      <section class="hero wrap">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="pulse-dot"></span> FULL-STACK · BACKEND · CLOUD INTERVIEW PREP</div>
+          <h1>Crack the interview.<br><span class="gradient-text" id="heroWord">Master Spring Boot.</span></h1>
+          <p class="hero-sub">A hands-on atlas of <b id="heroCount">600+</b> curated questions with model answers — from fundamentals to lead-level scenarios — across the modern Java, Angular and cloud stack. Animate the internals, drill with flashcards, run timed mock interviews and track mastery.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#tracks">Start learning <span>↓</span></a>
+            <button class="button button-quiet" id="heroMock">🎙 Quick mock interview</button>
+          </div>
+          <div class="hero-stats">
+            <div><strong data-count id="statQuestions">0</strong><span>questions</span></div>
+            <div><strong data-count id="statTracks">0</strong><span>tracks</span></div>
+            <div><strong id="statMastery">0%</strong><span>mastered</span></div>
+            <div><strong data-count id="statStreak">0</strong><span>day streak</span></div>
+          </div>
+        </div>
+        <div class="hero-art reveal" aria-hidden="true">
+          <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit orbit-3"></div>
+          <div class="art-core"><span>✦</span><b>YOU</b><small>interview-ready</small></div>
+          <div class="orbit-ring" id="orbitRing"></div>
+        </div>
+        <article class="qotd panel reveal" id="qotd">
+          <div class="qotd-head"><span class="eyebrow">⚡ QUESTION OF THE DAY</span><span class="chip" id="qotdTrack"></span></div>
+          <h3 id="qotdQ"></h3>
+          <div class="qotd-actions"><button class="button button-quiet" id="qotdReveal">Reveal answer ↗</button><button class="button button-quiet" id="qotdNext">Shuffle ↻</button><button class="button button-quiet" id="qotdOpen">Open in track →</button></div>
+          <div class="qotd-answer answer-body" id="qotdA" hidden></div>
+        </article>
+      </section>
+
+      <!-- Tracks -->
+      <section class="wrap section" id="tracks">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">01 / CHOOSE YOUR TRACK</div><h2>Every section, <span class="muted">base to expert.</span></h2><p>Ten core tracks with 40–70+ questions each, plus Kafka, System Design, NestJS, Behavioral and Project Deep-Dive — every answer with a real-life example and an animated walkthrough. Pick an interview focus to highlight what matters most.</p></div>
+        </div>
+        <div class="focus-bar reveal" role="group" aria-label="Interview focus">
+          <span class="tiny-label">INTERVIEW FOCUS</span>
+          <button class="focus-chip active" data-focus="all">Everything</button>
+          <button class="focus-chip" data-focus="fullstack">Java full-stack</button>
+          <button class="focus-chip" data-focus="backend">Backend</button>
+          <button class="focus-chip" data-focus="frontend">Frontend</button>
+          <button class="focus-chip" data-focus="cloud">Cloud / DevOps</button>
+          <button class="focus-chip" data-focus="lead">Lead / Architect</button>
+        </div>
+        <div class="track-grid" id="trackGrid"></div>
+        <div class="overall panel reveal">
+          <div class="overall-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" id="overallRing" cx="60" cy="60" r="52"/></svg><b id="overallPct">0%</b></div>
+          <div class="overall-copy"><span class="tiny-label">OVERALL READINESS</span><h3 id="overallTitle">Let's get started</h3><p id="overallText">Open a track, reveal answers, and mark questions you can explain confidently.</p></div>
+          <div class="level-legend" id="levelLegend"></div>
+        </div>
+      </section>
+
+      <!-- Practice -->
+      <section class="wrap section" id="practice">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">02 / PRACTISE UNDER PRESSURE</div><h2>Turn knowledge <span class="muted">into recall.</span></h2><p>Three modes: a quick-fire quiz, flip-card revision and a timed mock interview where you answer aloud and grade yourself.</p></div>
+        </div>
+        <div class="practice-shell panel reveal">
+          <div class="practice-tabs" role="tablist">
+            <button class="ptab active" role="tab" aria-selected="true" data-mode="quiz">⚡ Quiz</button>
+            <button class="ptab" role="tab" aria-selected="false" data-mode="flash">🃏 Flashcards</button>
+            <button class="ptab" role="tab" aria-selected="false" data-mode="mock">🎙 Mock interview</button>
+          </div>
+          <div class="practice-config">
+            <label>Track<select id="practiceTrack" class="select-control"></select></label>
+            <label>Level<select id="practiceLevel" class="select-control"><option value="all">All levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option></select></label>
+            <label>Questions<select id="practiceCount" class="select-control"><option>5</option><option selected>10</option><option>15</option><option>20</option></select></label>
+            <label class="check"><input type="checkbox" id="practiceUnmastered"> Skip mastered</label>
+            <button id="practiceStart" class="button button-primary">Start →</button>
+          </div>
+          <div class="practice-stage" id="practiceStage">
+            <div class="practice-intro" id="practiceIntro">
+              <div class="intro-orb">⚡</div>
+              <h3 id="practiceIntroTitle">Quick-fire quiz</h3>
+              <p id="practiceIntroText">Pick the strongest answer from four options. Instant feedback with the full model answer after each question.</p>
+            </div>
+          </div>
+        </div>
+        <div class="coach-card panel reveal">
+          <div><div class="eyebrow">THE ANSWER FRAMEWORK</div><h3>Make every answer count.</h3></div>
+          <div class="framework-list">
+            <div><span>01</span><b>Define</b><p>One crisp sentence.</p></div>
+            <div><span>02</span><b>Explain</b><p>How it works and why.</p></div>
+            <div><span>03</span><b>Example</b><p>From a real project you worked on.</p></div>
+            <div><span>04</span><b>Trade-off</b><p>Limits, alternatives, failure modes.</p></div>
+          </div>
+          <p class="coach-tip">✦ <b>Lead-level signal:</b> don't stop at "what it is" — say when you'd use it, what breaks, and how you'd observe it in production.</p>
+        </div>
+      </section>
+
+      <!-- Your story -->
+      <section class="wrap section" id="story">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">03 / YOUR STORY</div><h2>Tell your story <span class="muted">with confidence.</span></h2><p>Build your own 90-second pitch, find the questions behind every skill on your CV, and follow a four-week plan. Everything you type stays in your browser.</p></div>
+        </div>
+        <div class="story-grid">
+          <article class="profile-card panel reveal">
+            <div class="eyebrow">PITCH BUILDER</div>
+            <h3 class="builder-title">Fill in the blanks</h3>
+            <form class="pitch-form" id="pitchForm" autocomplete="off">
+              <label>Current role<input name="role" placeholder="backend engineer"></label>
+              <label>Years of experience<input name="years" placeholder="4"></label>
+              <label class="wide">What you build now<input name="product" placeholder="microservices for an online food-delivery platform"></label>
+              <label class="wide">Main technologies<input name="stack" placeholder="Java, Spring Boot, PostgreSQL, Kafka and AWS"></label>
+              <label class="wide">Something you own or improved<input name="win" placeholder="I reduced checkout API latency by 40% by adding caching"></label>
+              <label class="wide">Earlier experience<input name="past" placeholder="REST APIs and Angular dashboards for a logistics company"></label>
+              <label class="wide">What you're looking for<input name="goal" placeholder="a role building larger distributed systems with a strong engineering culture"></label>
+            </form>
+            <button class="text-link" id="pitchReset" type="button">Clear and show the example ↺</button>
+          </article>
+          <article class="pitch-card panel reveal">
+            <div class="eyebrow">YOUR 90-SECOND PITCH</div>
+            <p id="pitchText"></p>
+            <div class="row-gap"><button class="button button-quiet" id="speakPitch">🔊 Listen</button><button class="button button-quiet" id="practicePitch">⏱ Practise (90 s)</button><button class="button button-quiet" id="copyPitch">⧉ Copy</button><a class="button button-quiet" href="#/track/projects">Project deep-dive →</a></div>
+            <div class="pitch-timer" id="pitchTimer" hidden><div class="bar"><i id="pitchBar"></i></div><span id="pitchTime">90 s</span></div>
+            <p class="muted small pitch-tip">Structure: present → past → future. Say it out loud until it sounds natural, not memorised.</p>
+          </article>
+          <article class="skills-card panel reveal">
+            <div class="eyebrow">SKILL → QUESTIONS MAP</div>
+            <p class="muted small">Every skill you list on a CV invites follow-up questions. Tap a skill to practise exactly those.</p>
+            <div class="skill-cloud" id="skillCloud"></div>
+          </article>
+          <article class="plan-card panel reveal">
+            <div class="plan-head"><div><div class="eyebrow">4-WEEK PLAN</div><h3>Interview sprint</h3></div><b class="plan-pct" id="planPct">0%</b></div>
+            <div class="plan-weeks" id="planWeeks"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Journey -->
+      <section class="wrap section" id="journey">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">04 / SEE THE BIG PICTURE</div><h2>Follow a request <span class="muted">end to end.</span></h2><p>Pick a scenario and watch a request travel Angular → AWS edge → Spring Boot → PostgreSQL and back.</p></div>
+          <div class="heading-controls">
+            <select id="scenarioSelect" class="select-control" aria-label="Choose scenario"><option value="success">Successful request</option><option value="auth">Expired token</option><option value="validation">Invalid input</option><option value="slowdb">Slow database</option><option value="downstream">Downstream failure</option></select>
+            <button id="playJourney" class="button button-primary">▶ Play</button>
+            <label class="speed-control">Speed <b id="journeySpeedValue">1.0×</b><input id="journeySpeed" type="range" min="0.5" max="2.5" step="0.25" value="1" aria-label="Playback speed"></label>
+          </div>
+        </div>
+        <div class="journey-layout">
+          <div class="journey-map panel reveal">
+            <div class="map-topline"><span><span class="live-dot"></span> LIVE JOURNEY SIMULATOR</span><span id="journeyStatus" class="status-pill">READY</span></div>
+            <div class="journey-track" id="journeyTrack"></div>
+            <div class="map-footer"><span id="stepCounter">STEP 01 / 07</span><div class="map-progress"><i id="journeyProgress"></i></div><div class="map-controls"><button id="prevStep" class="round-btn" aria-label="Previous step">←</button><button id="nextStep" class="round-btn" aria-label="Next step">→</button></div></div>
+          </div>
+          <article class="journey-detail panel reveal" id="journeyDetail" aria-live="polite">
+            <div class="detail-kicker"><span id="detailNumber">LAYER 01</span><span class="detail-chip" id="detailTag">CLIENT</span></div>
+            <h3 id="detailTitle"></h3><p id="detailBody"></p>
+            <div class="analogy"><span>✧</span><div><b>Think of it like this</b><p id="detailAnalogy"></p></div></div>
+            <div class="detail-bottom"><div><span class="tiny-label">WHAT TO INSPECT</span><b id="detailInspect"></b></div><div><span class="tiny-label">INTERVIEW ANGLE</span><b id="detailInterview"></b></div></div>
+            <div class="row-gap"><button id="speakJourney" class="button button-quiet">🔊 Read this step</button><button id="journeyTrackLink" class="button button-quiet">Related track →</button></div>
+          </article>
+        </div>
+        <div class="scenario-outcome panel reveal"><div class="outcome-icon" id="outcomeIcon">✓</div><div><span class="tiny-label">SCENARIO OUTCOME</span><b id="outcomeTitle"></b><p id="outcomeText"></p></div><button id="resetJourney" class="button button-quiet">Reset ↺</button></div>
+      </section>
+
+      <!-- Runtime lab -->
+      <section class="wrap section" id="lab">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">05 / OPEN THE BLACK BOX</div><h2>Inside the <span class="muted">runtime.</span></h2><p>Animate twelve mechanisms interviewers love to probe, hear the explanation, then jump straight to the related questions.</p></div>
+        </div>
+        <div class="concept-layout">
+          <div class="concept-menu panel reveal" id="conceptMenu"></div>
+          <article class="concept-stage panel reveal">
+            <div class="concept-stage-head"><div><span class="tiny-label" id="conceptKicker"></span><h3 id="conceptTitle"></h3></div><button id="playConcept" class="button button-primary">▶ Animate</button></div>
+            <div class="concept-animation" id="conceptAnimation" aria-live="polite"></div>
+            <p id="conceptBody" class="concept-body"></p>
+            <div class="concept-analogy"><b>Connect the dots</b><span id="conceptAnalogy"></span></div>
+            <div class="concept-footer"><button id="speakConcept" class="button button-quiet">🔊 Explain aloud</button><button id="relatedQuestions" class="button button-quiet">Related questions ↗</button><span id="conceptStepStatus" class="muted small"></span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Toolkit -->
+      <section class="wrap section" id="toolkit">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">06 / MAKE IT YOURS</div><h2>Your interview <span class="muted">toolkit.</span></h2><p>Add your own questions, revise what's weak, and back up your progress — everything stays in this browser.</p></div>
+        </div>
+        <div class="toolkit-grid">
+          <article class="tool-card panel reveal"><div class="tool-icon purple">＋</div><h3>Add a custom question</h3><p>Capture questions from real interviews with your own answer. They join the chosen track.</p><button class="text-link" id="addQuestionBtn">Create question ↗</button></article>
+          <article class="tool-card panel reveal"><div class="tool-icon mint">◷</div><h3>Weak-spot revision</h3><p>Flashcards for questions you rated "missed" or "partial", plus saved ones.</p><button class="text-link" id="reviseBtn">Start revision ↗</button></article>
+          <article class="tool-card panel reveal"><div class="tool-icon orange">⇅</div><h3>Backup &amp; restore</h3><p>Export progress, notes and custom questions as JSON; import on another device.</p><div class="row-gap"><button class="text-link" id="exportBtn">Export ↗</button><button class="text-link" id="importBtn">Import ↗</button></div><input type="file" id="importFile" accept="application/json,.json" hidden></article>
+          <article class="tool-card panel reveal"><div class="tool-icon pink">⌨</div><h3>Keyboard shortcuts</h3><p><kbd>Ctrl K</kbd> search · <kbd>J</kbd>/<kbd>K</kbd> move · <kbd>Enter</kbd> open · <kbd>M</kbd> master · <kbd>S</kbd> save · <kbd>Space</kbd> flip card</p><button class="text-link" id="resetBtn">Reset all progress</button></article>
+        </div>
+      </section>
+    </div>
+
+    <!-- ════════════════ TRACK VIEW ════════════════ -->
+    <div id="trackView" hidden>
+      <section class="track-hero" id="trackHero">
+        <div class="wrap track-hero-inner">
+          <div>
+            <a href="#/" class="back-link">← All tracks</a>
+            <div class="track-hero-title"><span class="track-hero-icon" id="tvIcon"></span><div><h1 id="tvTitle"></h1><p id="tvBlurb"></p></div></div>
+            <div class="row-gap">
+              <button class="button button-primary" id="tvFlash">🃏 Flashcards</button>
+              <button class="button button-quiet" id="tvQuiz">⚡ Quiz</button>
+              <button class="button button-quiet" id="tvMock">🎙 Mock</button>
+            </div>
+          </div>
+          <div class="tv-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" id="tvRing" cx="60" cy="60" r="52"/></svg><div><b id="tvPct">0%</b><small id="tvCounts">0 / 0</small></div></div>
+        </div>
+      </section>
+      <div class="wrap track-body">
+        <aside class="track-side panel" id="trackSide">
+          <span class="tiny-label">TOPICS</span>
+          <div id="topicList" class="topic-list"></div>
+          <span class="tiny-label">LEVELS</span>
+          <div id="levelBars" class="level-bars"></div>
+        </aside>
+        <div class="track-main">
+          <div class="track-toolbar panel" id="trackToolbar">
+            <div class="search-wrap"><span>⌕</span><input id="tvSearch" type="search" placeholder="Search this track…" autocomplete="off" aria-label="Search this track"></div>
+            <div class="seg" id="levelSeg" role="group" aria-label="Filter by level">
+              <button class="active" data-level="all">All</button><button data-level="Beginner">Beginner</button><button data-level="Intermediate">Intermediate</button><button data-level="Advanced">Advanced</button><button data-level="Expert">Expert</button>
+            </div>
+            <select id="statusFilter" class="select-control" aria-label="Filter by status"><option value="all">All status</option><option value="unseen">Not opened yet</option><option value="review">Needs review</option><option value="saved">Saved ♥</option><option value="mastered">Mastered ✓</option><option value="todo">Not mastered</option></select>
+            <label class="walk-voice" title="Read each step aloud during a walkthrough"><input type="checkbox" id="walkVoice"> 🔊 Narrate walkthroughs</label>
+            <button class="button button-quiet" id="expandAll">Expand all</button>
+          </div>
+          <div class="topic-chips" id="topicChips"></div>
+          <p class="result-line" id="tvResult"></p>
+          <div id="qList" class="q-list"></div>
+          <div id="tvEmpty" class="empty-state" hidden><span>⌕</span><h3>No questions match</h3><p>Try another keyword or clear the filters.</p><button id="tvClear" class="button button-quiet">Clear filters</button></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer wrap">
+      <a class="brand" href="#/"><span class="brand-mark">✦</span><span>interview<span class="brand-light">atlas</span></span></a>
+      <span>Static by design · No account · Your progress stays in this browser</span>
+      <a href="#main">Back to top ↑</a>
+    </footer>
+  </main>
+
+  <!-- Command palette -->
+  <div class="palette-backdrop" id="palette" hidden>
+    <div class="palette panel" role="dialog" aria-modal="true" aria-label="Search questions">
+      <div class="palette-input"><span>⌕</span><input id="paletteInput" placeholder="Search every question, answer and topic…" autocomplete="off"><kbd>Esc</kbd></div>
+      <div class="palette-results" id="paletteResults" role="listbox"></div>
+      <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span id="paletteCount"></span></div>
+    </div>
+  </div>
+
+  <dialog id="questionDialog" class="question-dialog">
+    <form id="questionForm" method="dialog">
+      <div class="dialog-head"><div><div class="eyebrow">CUSTOMISE YOUR ATLAS</div><h2>Add a question</h2></div><button type="button" id="closeDialog" class="icon-btn" aria-label="Close">✕</button></div>
+      <label>Question<input id="newQuestion" required maxlength="300" placeholder="e.g. How would you design a resilient payment API?"></label>
+      <div class="two-col"><label>Track<select id="newTrack"></select></label><label>Level<select id="newLevel"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option><option>Expert</option></select></label></div>
+      <label>Model answer<textarea id="newAnswer" required rows="6" maxlength="6000" placeholder="First line = crisp summary. Use '- ' for bullets and ~~~ fences for code."></textarea></label>
+      <label>Key takeaway<input id="newTakeaway" maxlength="240" placeholder="One sentence to remember"></label>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="button button-quiet">Cancel</button><button type="submit" class="button button-primary">Add to atlas ✦</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+  <script src="./data/_registry.js" defer></script>
+  <script src="./data/angular.js" defer></script>
+  <script src="./data/java.js" defer></script>
+  <script src="./data/concurrency.js" defer></script>
+  <script src="./data/springboot.js" defer></script>
+  <script src="./data/database.js" defer></script>
+  <script src="./data/microservices.js" defer></script>
+  <script src="./data/devops.js" defer></script>
+  <script src="./data/aws.js" defer></script>
+  <script src="./data/cicd.js" defer></script>
+  <script src="./data/cloud.js" defer></script>
+  <script src="./data/kafka.js" defer></script>
+  <script src="./data/systemdesign.js" defer></script>
+  <script src="./data/leadership.js" defer></script>
+  <script src="./data/projects.js" defer></script>
+  <script src="./data/nestjs.js" defer></script>
+  <script src="./data/examples-frontend-java.js" defer></script>
+  <script src="./data/examples-backend.js" defer></script>
+  <script src="./data/examples-platform.js" defer></script>
+  <script src="./data/_labs.js" defer></script>
+  <script src="./js/app.js" defer></script>
+</body>
+</html>
