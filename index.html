@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0b1020">
   <meta name="description" content="Interview Atlas — 700 curated Java full-stack interview questions with model answers across Angular, Java, Multithreading, Spring Boot, Databases, Microservices, Docker + Jenkins, CI/CD, AWS, Cloud, Kafka, System Design and Leadership. Animated, interactive and offline-friendly.">
   <title>Interview Atlas</title>
@@ -284,10 +287,18 @@
     </footer>
   </main>
 
+  <nav class="bottom-nav" aria-label="Quick navigation">
+    <a href="#/" data-bn="home"><span>⌂</span>Home</a>
+    <a href="#tracks" data-bn="tracks"><span>▦</span>Tracks</a>
+    <button type="button" class="bn-search" id="bnSearch" aria-label="Search questions"><span>⌕</span>Search</button>
+    <a href="#practice" data-bn="practice"><span>⚡</span>Practice</a>
+    <a href="#story" data-bn="story"><span>✎</span>Story</a>
+  </nav>
+
   <!-- Command palette -->
   <div class="palette-backdrop" id="palette" hidden>
     <div class="palette panel" role="dialog" aria-modal="true" aria-label="Search questions">
-      <div class="palette-input"><span>⌕</span><input id="paletteInput" placeholder="Search every question, answer and topic…" autocomplete="off"><kbd>Esc</kbd></div>
+      <div class="palette-input"><span>⌕</span><input id="paletteInput" type="search" enterkeyhint="search" placeholder="Search every question, answer and topic…" autocomplete="off"><kbd>Esc</kbd><button type="button" class="palette-close" id="paletteClose" aria-label="Close search">✕</button></div>
       <div class="palette-results" id="paletteResults" role="listbox"></div>
       <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span id="paletteCount"></span></div>
     </div>

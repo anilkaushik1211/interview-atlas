@@ -750,8 +750,8 @@
 
   /* ───────────── Command palette ───────────── */
   let pSel = 0, pItems = [];
-  function openPalette() { $("#palette").hidden = false; $("#paletteInput").value = ""; renderPalette(); setTimeout(() => $("#paletteInput").focus(), 20); }
-  function closePalette() { $("#palette").hidden = true; }
+  function openPalette() { $("#palette").hidden = false; document.documentElement.classList.add("no-scroll"); $("#paletteInput").value = ""; renderPalette(); setTimeout(() => $("#paletteInput").focus(), 20); }
+  function closePalette() { $("#palette").hidden = true; document.documentElement.classList.remove("no-scroll"); }
   function hl(text, words) { let s = esc(text); words.forEach(w => { if (w.length > 1) s = s.replace(new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"), "<mark>$1</mark>"); }); return s; }
   function renderPalette() {
     const term = $("#paletteInput").value.trim().toLowerCase(), words = term.split(/\s+/).filter(Boolean);
@@ -866,13 +866,16 @@
   function scrollEffects() {
     const bar = $("#scrollProgress"), links = $$("[data-nav]");
     const ids = links.map(a => a.getAttribute("href").slice(1));
+    const bnItems = $$("[data-bn]");
+    const setBottom = key => bnItems.forEach(a => a.classList.toggle("active", a.dataset.bn === key));
     const onScroll = () => {
       const h = document.documentElement.scrollHeight - innerHeight; bar.style.width = (h > 0 ? scrollY / h * 100 : 0) + "%";
-      if (route.view !== "home") { links.forEach(a => a.classList.remove("active")); return; }
+      if (route.view !== "home") { links.forEach(a => a.classList.remove("active")); setBottom("tracks"); return; }
       let cur = ""; for (const id of ids) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 140) cur = id; }
       links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur));
+      setBottom(["tracks", "practice", "story"].includes(cur) ? cur : cur ? "" : "home");
     };
-    addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    addEventListener("scroll", onScroll, { passive: true }); addEventListener("hashchange", () => setTimeout(onScroll, 50)); onScroll();
   }
   function applyTheme() { document.body.classList.toggle("light", state.theme === "light"); $("#themeToggle").textContent = state.theme === "light" ? "☾" : "☼"; document.querySelector('meta[name="theme-color"]').content = state.theme === "light" ? "#f5f7ff" : "#0b1020"; }
 
@@ -887,6 +890,9 @@
     $("#testVoice").onclick = () => speak("Hi there. Let's crack this interview. Explain how a HashMap works internally.");
     $("#stopSpeech").onclick = stopSpeech;
     $("#openPalette").onclick = openPalette;
+    $("#bnSearch").onclick = openPalette;
+    $("#paletteClose").onclick = closePalette;
+    $$(".topnav a").forEach(a => a.addEventListener("click", () => { $(".topnav").classList.remove("open"); $("#menuToggle").setAttribute("aria-expanded", false); }));
     $("#heroMock").onclick = () => launchPractice("mock", "core", 5);
     // QOTD
     $("#qotdReveal").onclick = () => { const a = $("#qotdA"); if (a.hidden) { a.innerHTML = md(qotd.answer); a.style.setProperty("--c", trackById(qotd.track).color); a.hidden = false; $("#qotdReveal").textContent = "Hide answer ↑"; touchStreak(); } else { a.hidden = true; $("#qotdReveal").textContent = "Reveal answer ↗"; } };
