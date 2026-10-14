@@ -497,7 +497,6 @@
     const total = trackQuestions(tv.track).length;
     $("#tvResult").textContent = list.length === total ? `${total} questions · tap a question to reveal the model answer` : `Showing ${list.length} of ${total} questions`;
     $$("#topicList .topic-item, #topicChips button").forEach(b => b.classList.toggle("active", b.dataset.topic === tv.topic));
-    $("#expandAll").textContent = "Expand all";
     tv.open.forEach(id => { if (list.some(q => q.id === id)) toggleCard(id, true, false); });
   }
   function updateCards() {
@@ -517,8 +516,23 @@
     const card = document.getElementById("q-" + id); if (!card) return;
     const open = force ?? !card.classList.contains("open"), q = qById(id), inner = card.querySelector(".q-inner");
     if (open && !inner.dataset.ready) { inner.innerHTML = innerHTML(q); inner.dataset.ready = "1"; }
+    let closedAbove = false;
+    if (open) {                                   // only one answer open at a time
+      $$(".q-card.open").forEach(other => {
+        if (other === card) return;
+        if (other.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING) closedAbove = true;
+        toggleCard(other.dataset.id, false, false);
+      });
+    }
     card.classList.toggle("open", open); card.querySelector(".q-head").setAttribute("aria-expanded", open);
-    if (open) { tv.open.add(id); if (!state.seen[id]) { state.seen[id] = 1; save(); } touchStreak(); if (scroll) setTimeout(() => card.scrollIntoView({ behavior: "smooth", block: "nearest" }), 120); }
+    if (open) {
+      tv.open.add(id); if (!state.seen[id]) { state.seen[id] = 1; save(); } touchStreak();
+      // Wait for the previous card's collapse animation (0.4s) before aligning the new one
+      if (scroll) setTimeout(() => {
+        const top = card.getBoundingClientRect().top, margin = parseFloat(getComputedStyle(card).scrollMarginTop) || 0;
+        if (closedAbove || top < margin || top > innerHeight * .55) card.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, closedAbove ? 430 : 120);
+    }
     else { tv.open.delete(id); if (walk && walk.root === inner) stopWalk(); }
   }
   function focusQuestion(id, open) {
@@ -953,7 +967,6 @@
     $("#statusFilter").onchange = e => { tv.status = e.target.value; renderList(); };
     const topicClick = e => { const b = e.target.closest("[data-topic]"); if (!b) return; tv.topic = b.dataset.topic; renderList(); window.scrollTo({ top: $("#trackToolbar").offsetTop - 90, behavior: "smooth" }); };
     $("#topicList").onclick = topicClick; $("#topicChips").onclick = topicClick;
-    $("#expandAll").onclick = () => { const anyClosed = $$(".q-card:not(.open)").length > 0; $$(".q-card").forEach(c => toggleCard(c.dataset.id, anyClosed, false)); $("#expandAll").textContent = anyClosed ? "Collapse all" : "Expand all"; };
     $("#tvClear").onclick = () => { tv.level = "all"; tv.topic = "all"; tv.status = "all"; tv.search = ""; $("#tvSearch").value = ""; $("#statusFilter").value = "all"; $$("#levelSeg button").forEach(b => b.classList.toggle("active", b.dataset.level === "all")); renderList(); };
     $("#tvFlash").onclick = () => launchPractice("flash", route.track, 15);
     $("#tvQuiz").onclick = () => launchPractice("quiz", route.track, 10);
@@ -1002,7 +1015,7 @@
         const k = e.key.toLowerCase(), cur = tv.list[tv.focus];
         if (k === "j" || e.key === "ArrowDown" && e.shiftKey) { e.preventDefault(); moveFocus(1); }
         else if (k === "k") { e.preventDefault(); moveFocus(-1); }
-        else if ((k === "enter" || k === "o") && cur && !e.target.closest("button")) { e.preventDefault(); toggleCard(cur.id); }
+        else if ((k === "enter" || k === "o") && cur && !e.target.closest?.("button")) { e.preventDefault(); toggleCard(cur.id); }
         else if (k === "m" && cur) setMastered(cur.id, !M.has(cur.id));
         else if (k === "s" && cur) setSaved(cur.id, !F.has(cur.id));
         else if (e.key === "/") { e.preventDefault(); $("#tvSearch").focus(); }

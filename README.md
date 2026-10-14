@@ -28,7 +28,7 @@ Every question has a level (Beginner → Expert), a model answer (with code wher
 
 ## Features
 
-- **Track pages**: topic, level and status filters; search; expand all; personal notes; "Missed / Partial / Nailed" self-rating; deep links to any question.
+- **Track pages**: topic, level and status filters; search; one answer open at a time; personal notes; "Missed / Partial / Nailed" self-rating; deep links to any question.
 - **Animated answers**: answer parts animate in when a card opens, and **▶ Walkthrough** steps through each point with a spotlight (optionally narrated).
 - **Practice**: a quick-fire quiz, 3D flip-card flashcards, and a timed **mock interview** where you answer aloud and grade yourself.
 - **Your story**: a pitch builder that turns your role and stack into a 90-second introduction (with listen, copy and a practice timer), a skill-to-questions map, and a 4-week plan checklist. Nothing you type leaves your browser.
